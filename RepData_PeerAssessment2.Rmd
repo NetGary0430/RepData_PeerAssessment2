@@ -1,0 +1,15 @@
+---
+title: "RepData_PeerAssessment2"
+author: "Gary"
+date: "August 17, 2015"
+output: html_document
+---
+
+##Title
+
+##Synopsis
+
+##Data Processing
+
+##Results
+
