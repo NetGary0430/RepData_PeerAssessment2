@@ -5,11 +5,77 @@ date: "August 17, 2015"
 output: html_document
 ---
 
-##Title
+##U.S. Storms: The Physical and Financial Harm (1950 - 2011)
 
 ##Synopsis
+Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries, and property damage, and preventing such outcomes to the extent possible is a key concern.  In this study, we strive to answer the following questions:
+
+1. Which types of events are most harmful with respect to population health?
+
+2. Which types of events have the greatest economic consequences?
 
 ##Data Processing
 
+
+```{r}
+## Load the appropriate libraries
+library("dplyr")
+library("ggplot2")
+
+## Read in NoAA data - note that read.csv can read directly from compressed files
+noaaDB <- read.csv("repdata-data-StormData.csv.bz2")
+
+## For dplyr, tbl_df is easier to use
+noaaDB <- tbl_df(noaaDB)
+
+glimpse(noaaDB)
+
+## Rank Event Types by cost to human health
+dfDamage <- noaaDB %>%
+    group_by(EVTYPE) %>%
+    summarise(p_Fatal = sum(FATALITIES, na.rm = TRUE), p_Injured = sum(INJURIES, na.rm = TRUE)) %>%
+    mutate(rank = rank(p_Fatal)) %>%
+    arrange(desc(rank), desc(p_Injured))
+
+
+## Rank Event Types by cost to economic health
+dfDamageEcon <- noaaDB %>%
+    group_by(EVTYPE) %>%
+    summarise(p_PropDmg = sum(PROPDMG, na.rm = TRUE), p_CropDmg = sum(CROPDMG, na.rm = TRUE)) %>%
+    mutate(rank = rank(p_PropDmg)) %>%
+    arrange(desc(rank), desc(p_CropDmg))
+
+
+totImpace <- full_join(dfDamage, dfDamageEcon, by = "EVTYPE")
+
+```
+
+
+
 ##Results
+
+
+```{r}
+head(dfDamage)
+```
+
+
+```{r}
+head(dfDamageEcon)
+```
+
+
+
+```{r}
+head(totImpace)
+```
+
+
+
+
+
+
+
+
+
 
