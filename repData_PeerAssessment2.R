@@ -4,6 +4,7 @@
 ## Load the appropriate libraries
 library("dplyr")
 library("ggplot2")
+library("knitr")
 
 ## Read in NoAA data - note that read.csv can read directly from compressed files
 noaaDB <- read.csv("repdata-data-StormData.csv.bz2")
@@ -29,6 +30,13 @@ dfDamageEcon <- noaaDB %>%
 
 totImpace <- full_join(dfDamage, dfDamageEcon, by = "EVTYPE")
 
-
+library(lattice)
+xyplot(steps ~ interval | factor(weekend.indicator),
+       layout = c(1, 2),
+       xlab="Year",
+       ylab="Damage",
+       type="l",
+       lty=1,
+       data=wk_df)
 
 
