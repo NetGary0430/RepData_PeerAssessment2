@@ -171,6 +171,7 @@ totImpace &lt;- full_join(dfDamage, dfDamageEcon, by = &quot;EVTYPE&quot;)</code
 ## 4           HEAT     937      2100  982
 ## 5      LIGHTNING     816      5230  981
 ## 6      TSTM WIND     504      6957  980</code></pre>
+<p>According to the data, the highest overall cost to human health between 1950 and November 2011 as measured in fatalaties and injuries is caused by Tornadoes. Deaths from Tornadoes are almost three times higher than the next highest cause, Excesssive Heat. While a fatality is the ultimate cost, the real difference in cost to human health is the number of injuries. Tornadoes cause well over 10 times more injuries that its counterparts, TSTM Wind, Flood, or Excessive Heat.</p>
 <pre class="r"><code>head(dfDamageEcon)</code></pre>
 <pre><code>## Source: local data frame [6 x 4]
 ## 
@@ -181,6 +182,8 @@ totImpace &lt;- full_join(dfDamage, dfDamageEcon, by = &quot;EVTYPE&quot;)</code
 ## 4             FLOOD  899938.5 168037.88  982
 ## 5 THUNDERSTORM WIND  876844.2  66791.45  981
 ## 6              HAIL  688693.4 579596.28  980</code></pre>
+<p>From an economic perspective, the data reveals a somewhat different hierarchy of costs, but not completely different than those that particularly affect human health. Tornadoes still rank the hightest in terms of economic cost in property damage, but are certainly not the most damaging to agricultural endeavors.</p>
+<p>Crop damages top economic costs result from Hail (which is almost three times higher than its next neighbor), Flash Floods, and Floods. While the financial cost to crops is less than that of property damage, the overall cost to society cannot be understated.</p>
 <pre class="r"><code>head(totImpace)</code></pre>
 <pre><code>## Source: local data frame [6 x 7]
 ## 

@@ -3,7 +3,7 @@
 
 ## Load the appropriate libraries
 library("dplyr")
-lirbrary("ggplot2")
+library("ggplot2")
 
 ## Read in NoAA data - note that read.csv can read directly from compressed files
 noaaDB <- read.csv("repdata-data-StormData.csv.bz2")

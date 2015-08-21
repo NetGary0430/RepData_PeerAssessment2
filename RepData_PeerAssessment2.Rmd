@@ -59,12 +59,15 @@ totImpace <- full_join(dfDamage, dfDamageEcon, by = "EVTYPE")
 head(dfDamage)
 ```
 
+According to the data, the highest overall cost to human health between 1950 and November 2011 as measured in fatalaties and injuries is caused by Tornadoes.  Deaths from Tornadoes are almost three times higher than the next highest cause, Excesssive Heat.  While a fatality is the ultimate cost, the real difference in cost to human health is the number of injuries.  Tornadoes cause well over 10 times more injuries that its counterparts, TSTM Wind, Flood, or Excessive Heat.
 
 ```{r}
 head(dfDamageEcon)
 ```
 
+From an economic perspective, the data reveals a somewhat different hierarchy of costs, but not completely different than those that particularly affect human health.  Tornadoes still rank the hightest in terms of economic cost in property damage, but are certainly not the most damaging to agricultural endeavors.
 
+Crop damages top economic costs result from Hail (which is almost three times higher than its next neighbor), Flash Floods, and Floods.  While the financial cost to crops is less than that of property damage, the overall cost to society cannot be understated.
 
 ```{r}
 head(totImpace)
