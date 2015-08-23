@@ -19,24 +19,29 @@ dfDamage <- noaaDB %>%
     group_by(EVTYPE) %>%
     summarise(p_Fatal = sum(FATALITIES, na.rm = TRUE), p_Injured = sum(INJURIES, na.rm = TRUE)) %>%
     mutate(rank = rank(p_Fatal)) %>%
-    arrange(desc(rank), desc(p_Injured))
+    arrange(desc(rank), desc(p_Injured)) %>%
+    mutate(totMan = p_Fatal + p_Injured) %>%
+    head(5) %>%
+    arrange(desc(totMan))
+
+
 
 ## Rank Event Types by cost to economic health
 dfDamageEcon <- noaaDB %>%
     group_by(EVTYPE) %>%
     summarise(p_PropDmg = sum(PROPDMG, na.rm = TRUE), p_CropDmg = sum(CROPDMG, na.rm = TRUE)) %>%
     mutate(rank = rank(p_PropDmg)) %>%
-    arrange(desc(rank), desc(p_CropDmg))
+    arrange(desc(rank), desc(p_CropDmg)) %>%
+    mutate(tot = p_PropDmg + p_CropDmg) %>%
+    head(5) %>%
+    arrange(desc(tot))
 
-totImpace <- full_join(dfDamage, dfDamageEcon, by = "EVTYPE")
-
-library(lattice)
-xyplot(steps ~ interval | factor(weekend.indicator),
-       layout = c(1, 2),
-       xlab="Year",
-       ylab="Damage",
-       type="l",
-       lty=1,
-       data=wk_df)
-
+barplot(dfDamage$totMan, main = "Top 5 Event Types Affecting Health", 
+        xlab = "Event Types", 
+        ylab = "No. Affected",
+        names.arg = dfDamage$EVTYPE, cex.names = .75, las = 2)
+barplot(dfDamageEcon$tot, main = "Top 5 Event Types Affecting Economy", 
+        xlab = "Event Type", 
+        ylab = "Damage",
+        names.arg = dfDamageEcon$EVTYPE, cex.names = .75, las = 2)
 

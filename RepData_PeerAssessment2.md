@@ -90,20 +90,24 @@ glimpse(noaaDB)
 ## Rank Event Types by cost to human health
 dfDamage <- noaaDB %>%
     group_by(EVTYPE) %>%
-    summarise(p_Fatal = sum(FATALITIES, na.rm = TRUE), p_Injured = sum(INJURIES, na.rm = TRUE)) %>%
+    summarise(p_Fatal = sum(FATALITIES, na.rm = TRUE), 
+              p_Injured = sum(INJURIES, na.rm = TRUE)) %>%
     mutate(rank = rank(p_Fatal)) %>%
-    arrange(desc(rank), desc(p_Injured))
-
+    arrange(desc(rank), desc(p_Injured)) %>%
+    mutate(totMan = p_Fatal + p_Injured) %>%
+    head(5) %>%
+    arrange(desc(totMan))
 
 ## Rank Event Types by cost to economic health
 dfDamageEcon <- noaaDB %>%
     group_by(EVTYPE) %>%
-    summarise(p_PropDmg = sum(PROPDMG, na.rm = TRUE), p_CropDmg = sum(CROPDMG, na.rm = TRUE)) %>%
+    summarise(p_PropDmg = sum(PROPDMG, na.rm = TRUE), 
+              p_CropDmg = sum(CROPDMG, na.rm = TRUE)) %>%
     mutate(rank = rank(p_PropDmg)) %>%
-    arrange(desc(rank), desc(p_CropDmg))
-
-
-totImpace <- full_join(dfDamage, dfDamageEcon, by = "EVTYPE")
+    arrange(desc(rank), desc(p_CropDmg)) %>%
+    mutate(tot = p_PropDmg + p_CropDmg) %>%
+    head(5) %>%
+    arrange(desc(tot))
 ```
 
 
@@ -117,15 +121,14 @@ head(dfDamage)
 ```
 
 ```
-## Source: local data frame [6 x 4]
+## Source: local data frame [5 x 5]
 ## 
-##           EVTYPE p_Fatal p_Injured rank
-## 1        TORNADO    5633     91346  985
-## 2 EXCESSIVE HEAT    1903      6525  984
-## 3    FLASH FLOOD     978      1777  983
-## 4           HEAT     937      2100  982
-## 5      LIGHTNING     816      5230  981
-## 6      TSTM WIND     504      6957  980
+##           EVTYPE p_Fatal p_Injured rank totMan
+## 1        TORNADO    5633     91346  985  96979
+## 2 EXCESSIVE HEAT    1903      6525  984   8428
+## 3      LIGHTNING     816      5230  981   6046
+## 4           HEAT     937      2100  982   3037
+## 5    FLASH FLOOD     978      1777  983   2755
 ```
 
 According to the data, the highest overall cost to human health between 1950 and November 2011 as measured in fatalaties and injuries is caused by Tornadoes.  Deaths from Tornadoes are almost three times higher than the next highest cause, Excesssive Heat.  While a fatality is the ultimate cost, the real difference in cost to human health is the number of injuries.  Tornadoes cause well over 10 times more injuries that its counterparts, TSTM Wind, Flood, or Excessive Heat.
@@ -136,15 +139,14 @@ head(dfDamageEcon)
 ```
 
 ```
-## Source: local data frame [6 x 4]
+## Source: local data frame [5 x 5]
 ## 
-##              EVTYPE p_PropDmg p_CropDmg rank
-## 1           TORNADO 3212258.2 100018.52  985
-## 2       FLASH FLOOD 1420124.6 179200.46  984
-## 3         TSTM WIND 1335965.6 109202.60  983
-## 4             FLOOD  899938.5 168037.88  982
-## 5 THUNDERSTORM WIND  876844.2  66791.45  981
-## 6              HAIL  688693.4 579596.28  980
+##              EVTYPE p_PropDmg p_CropDmg rank       tot
+## 1           TORNADO 3212258.2 100018.52  985 3312276.7
+## 2       FLASH FLOOD 1420124.6 179200.46  984 1599325.1
+## 3         TSTM WIND 1335965.6 109202.60  983 1445168.2
+## 4             FLOOD  899938.5 168037.88  982 1067976.4
+## 5 THUNDERSTORM WIND  876844.2  66791.45  981  943635.6
 ```
 
 From an economic perspective, the data reveals a somewhat different hierarchy of costs, but not completely different than those that particularly affect human health.  Tornadoes still rank the hightest in terms of economic cost in property damage, but are certainly not the most damaging to agricultural endeavors.
@@ -153,20 +155,20 @@ Crop damages top economic costs result from Hail (which is almost three times hi
 
 
 ```r
-head(totImpace)
+barplot(dfDamage$totMan, main = "Top 5 Event Types Affecting Health", 
+        ylab = "No. Affected", ylim = c(0, 100000),
+        names.arg = dfDamage$EVTYPE, cex.names = .75, las = 2)
 ```
 
+![](RepData_PeerAssessment2_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+barplot(dfDamageEcon$tot, main = "Top 5 Event Types Affecting Economy", 
+        ylab = "Damage", ylim = c(0, 3500000),
+        names.arg = dfDamageEcon$EVTYPE, cex.names = .75, las = 2)
 ```
-## Source: local data frame [6 x 7]
-## 
-##           EVTYPE p_Fatal p_Injured rank.x p_PropDmg p_CropDmg rank.y
-## 1        TORNADO    5633     91346    985 3212258.2 100018.52    985
-## 2 EXCESSIVE HEAT    1903      6525    984    1460.0    494.40    925
-## 3    FLASH FLOOD     978      1777    983 1420124.6 179200.46    984
-## 4           HEAT     937      2100    982     298.5    662.70    839
-## 5      LIGHTNING     816      5230    981  603351.8   3580.61    979
-## 6      TSTM WIND     504      6957    980 1335965.6 109202.60    983
-```
+
+![](RepData_PeerAssessment2_files/figure-html/unnamed-chunk-4-2.png) 
 
 
 
